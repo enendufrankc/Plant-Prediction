@@ -107,12 +107,3 @@ model_version = max([int(i) for i in os.listdir("../saved_models") + [0]]) + 1
 model.save(f"../saved_models/{model_version}")
 Summary
 This project demonstrates how to build a CNN model using TensorFlow for plant disease classification. It covers steps such as data preprocessing
-
-
-
-
-
-
-Regenerate response
-
-Continue generating
