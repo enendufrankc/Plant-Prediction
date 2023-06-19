@@ -1,109 +1,37 @@
-Plant Disease Classification using TensorFlow
-This project aims to classify plant diseases using deep learning with TensorFlow. It utilizes a convolutional neural network (CNN) model to classify images of plants into different disease categories.
 
-Dataset
-The dataset used for this project is the "PlantVillage" dataset. It consists of images of plants belonging to three different classes: Potato Early Blight, Potato Late Blight, and Tomato Bacterial Spot.
+#Plant Disease Classification with Convolutional Neural Networks (CNN)
 
-Setup and Dependencies
-To run this project, you need to have TensorFlow and Matplotlib installed. You can install them using the following command:
+##Overview
+This Python script is a machine learning application using TensorFlow and Keras libraries to create a Convolutional Neural Networks (CNN) model. This model is designed to classify images of plants into three categories based on the presence of disease and type of disease.
 
-python
-Copy code
-pip install tensorflow matplotlib
-Usage
-Import the required libraries:
-python
-Copy code
-import tensorflow as tf
-from tensorflow.keras import models, layers
-import matplotlib.pyplot as plt
-Set the necessary parameters:
-python
-Copy code
-image_size = 256
-batch_size = 32
-channel = 3
-epoch = 5
-Load the dataset:
-python
-Copy code
-dataset = tf.keras.preprocessing.image_dataset_from_directory(
-    "PlantVillage",
-    shuffle=True,
-    image_size=(image_size, image_size),
-    batch_size=batch_size
-)
-Split the dataset into training, validation, and testing sets:
-python
-Copy code
-def get_dataset_partitions_tf(ds, train_split=0.8, val_split=0.1, test_split=0.1, shuffle=True, shuffle_size=10000):
-    # Function definition here
+The script works by training the CNN model on a dataset of plant images found in the 'PlantVillage' directory, partitioning the data into training, validation, and testing sets. The images are processed and augmented before they are fed into the model. The model is then trained for a specified number of epochs.
 
-train_ds, val_ds, test_ds = get_dataset_partitions_tf(dataset)
-Preprocess and augment the data:
-python
-Copy code
-resize_and_rescale = tf.keras.Sequential([
-    layers.experimental.preprocessing.Resizing(image_size, image_size),
-    layers.experimental.preprocessing.Rescaling(1.0/255)
-])
+Finally, the script evaluates the trained model on the testing set, and demonstrates how to use the trained model to make a prediction on a single image. The trained model is then saved in the 'saved_models' directory.
 
-data_augmentation = tf.keras.Sequential([
-    layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
-    layers.experimental.preprocessing.RandomRotation(0.2)
-])
-Define the CNN model architecture:
-python
-Copy code
-model = models.Sequential([
-    resize_and_rescale,
-    layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(batch_size, image_size, image_size, channel)),
-    # Model architecture definition here
-    layers.Dense(n_classes, activation='softmax'),
-])
+##Usage
+Ensure that you have the necessary packages installed, these include TensorFlow and matplotlib among others.
 
-model.build(input_shape=(batch_size, image_size, image_size, channel))
-model.summary()
-Compile and train the model:
-python
-Copy code
-model.compile(
-    optimizer="adam",
-    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-    metrics=["accuracy"]
-)
+Prepare your image dataset. This script expects the images to be stored in a directory named "PlantVillage", and the subdirectories in this folder should be the class names.
 
-history = model.fit(
-    train_ds,
-    epochs=epoch,
-    batch_size=batch_size,
-    verbose=1,
-    validation_data=val_ds
-)
-Evaluate the model:
-python
-Copy code
-scores = model.evaluate(test_ds)
-Plot training and validation metrics:
-python
-Copy code
-# Plotting code here
-Make predictions on new images:
-python
-Copy code
-def predict(model, img):
-    # Prediction code here
+Run the script in a Python environment where you have TensorFlow and other necessary packages installed. You can run this script in an environment like Jupyter Notebook or Google Colab.
 
-plt.figure(figsize=(15, 15))
-for images, labels in test_ds.take(1):
-    for i in range(9):
-        ax = plt.subplot(3, 3, i + 1)
-        plt.imshow(images[i].numpy().astype("uint8"))
-        # Prediction code here
-Save the model:
-python
-Copy code
-model_version = max([int(i) for i in os.listdir("../saved_models") + [0]]) + 1
-model.save(f"../saved_models/{model_version}")
-Summary
-This project demonstrates how to build a CNN model using TensorFlow for plant disease classification. It covers steps such as data preprocessing
+The model's training and validation accuracy/loss during the training process is displayed in real-time, and a graph showing these metrics across all epochs will be shown once training is complete.
+
+The script will also output the model's accuracy on the test dataset.
+
+An example image from the test set will be used for prediction to demonstrate how the model performs on unseen data.
+
+Finally, the trained model will be saved both in TensorFlow SavedModel format in the 'saved_models' directory and in HDF5 format as 'potatoes.h5' in the project's root directory.
+
+##Code Structure
+The script begins by setting up the necessary parameters and loading the image dataset from the 'PlantVillage' directory.
+It then visualizes a batch of images from the dataset.
+Next, it partitions the dataset into training, validation, and testing sets.
+The model is then built using a sequential Keras model, which includes several convolutional and max-pooling layers, followed by dense layers.
+The model is compiled and then trained on the training set for a specified number of epochs.
+After training, the model's performance is evaluated on the testing set.
+The script demonstrates how to use the trained model to make predictions on individual images.
+Finally, the trained model is saved in the 'saved_models' directory and as 'potatoes.h5'.
+
+##Contributing
+This script is open-source, and contributions are welcome. If you would like to contribute, you can open a pull request with your proposed changes. Please ensure that any additions or modifications are well-documented.
